@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FUBA Volley Cup 2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+    header {
+      background-color: #1d3557;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 2em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    /* Stili per le classifiche (simili alle tabelle statistiche) */
+    .standings {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .standings h2 {
+      margin-top: 0;
+    }
+    .standings-table {
+      margin-bottom: 20px;
+    }
+    .standings-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .standings-table th, .standings-table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    .standings-table th {
+      background-color: #1d3557;
+      color: white;
+    }
+    /* Stili per la lista delle squadre e dei giocatori */
+    .team-list, .player-list, .statistics-table {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Visualizza la lista delle squadre e nasconde quella dei giocatori inizialmente */
+    .team-list {
+      display: block;
+    }
+    .player-list {
+      display: none;
+    }
+    .team-item, .player-item {
+      margin: 10px 0;
+      padding: 12px;
+      background-color: #f8f9fa;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color 0.3s, transform 0.2s;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+    }
+    /* Colori di hover personalizzati per le squadre */
+    .team1-item:hover {
+      background-color: #8a2be2;
+    }
+    .team2-item:hover {
+      background-color: #4682b4;
+    }
+    .team3-item:hover {
+      background-color: #32cd32;
+    }
+    .team4-item:hover {
+      background-color: #000000;
+    }
+    .player-item:hover {
+      background-color: #f0e68c;
+    }
+    .team-item img {
+      width: 80px;
+      height: 80px;
+      margin-right: 15px;
+    }
+    .statistics-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .statistics-table th, .statistics-table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    .statistics-table th {
+      background-color: #1d3557;
+      color: white;
+    }
+    .statistics-table td {
+      background-color: #f9f9f9;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #1d3557;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1em;
+      transition: background-color 0.3s;
+    }
+    .back-btn:hover {
+      background-color: #457b9d;
+    }
+    /* Pulsante Admin (in alto a destra) */
+    #admin-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 15px;
+      background-color: #457b9d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #admin-btn:hover {
+      background-color: #1d3557;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  FUBA Volley Cup 2025
+  <!-- Il pulsante Admin è posizionato in alto a destra nell'header -->
+  <button id="admin-btn">Admin Login</button>
+</header>
+
+<div class="container">
+  <!-- Sezione Classifiche -->
+  <div class="standings">
+    <h2>Classifiche</h2>
+    <!-- Classifica Squadre -->
+    <div id="team-standings" class="standings-table">
+      <h3>Classifica Squadre</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Squadra</th>
+            <th>PTS</th>
+            <th>PG</th>
+            <th>V</th>
+            <th>S</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Le righe verranno generate via JS -->
+        </tbody>
+      </table>
+    </div>
+    <!-- Classifica Punti Singoli -->
+    <div id="points-standings" class="standings-table">
+      <h3>Classifica Punti Singoli</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Giocatore</th>
+            <th>PTS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Righe generate via JS -->
+        </tbody>
+      </table>
+    </div>
+    <!-- Classifica Assist -->
+    <div id="assists-standings" class="standings-table">
+      <h3>Classifica Assist</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Giocatore</th>
+            <th>Assist</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Righe generate via JS -->
+        </tbody>
+      </table>
+    </div>
+    <!-- Classifica Ammonizioni -->
+    <div id="cautions-standings" class="standings-table">
+      <h3>Classifica Ammonizioni</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Giocatore</th>
+            <th>Ammonizioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Righe generate via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Lista delle squadre -->
+  <div class="team-list" style="display: block;">
+    <h2>Seleziona una squadra:</h2>
+    <div class="team-item team1-item" onclick="showPlayers('team1', this)">
+      <img src="originals-removebg-preview.png" alt="Logo Squadra A">
+      The Originals
+    </div>
+    <div class="team-item team2-item" onclick="showPlayers('team2', this)">
+      <img src="logo_squadra_b.png" alt="Logo Squadra B">
+      Legion Aurea
+    </div>
+    <div class="team-item team3-item" onclick="showPlayers('team3', this)">
+      <img src="logo_squadra_c.png" alt="Logo Squadra C">
+      Gooners
+    </div>
+    <div class="team-item team4-item" onclick="showPlayers('team4', this)">
+      <img src="panterslogo.png" alt="Logo Squadra D">
+      Panters
+    </div>
+  </div>
+
+  <!-- Liste giocatori per ogni squadra (inizialmente nascoste) -->
+  <div id="team1" class="player-list">
+    <h2>Giocatori della Squadra A:</h2>
+    <div class="player-item" onclick="showStatistics('player1')">Enea Casciarri (C)</div>
+    <div class="player-item" onclick="showStatistics('player2')">Gioia Maggiolini</div>
+    <div class="player-item" onclick="showStatistics('player3')">Matteo Panno</div>
+    <div class="player-item" onclick="showStatistics('player4')">Lorenzo Cavanna</div>
+    <div class="player-item" onclick="showStatistics('player5')">Noura Kamouni</div>
+    <div class="player-item" onclick="showStatistics('player6')">Marco Zenobi</div>
+    <a href="javascript:void(0)" class="back-btn" onclick="backToTeams()">Torna alle squadre</a>
+  </div>
+
+  <div id="team2" class="player-list">
+    <h2>Giocatori della Squadra B:</h2>
+    <div class="player-item" onclick="showStatistics('player7')">Mattia De Rosa (C)</div>
+    <div class="player-item" onclick="showStatistics('player8')">Gabriele Lacava</div>
+    <div class="player-item" onclick="showStatistics('player9')">Domenico Del Bene</div>
+    <div class="player-item" onclick="showStatistics('player10')">Lorenzo Luzzi</div>
+    <div class="player-item" onclick="showStatistics('player11')">Michele Sforna</div>
+    <a href="javascript:void(0)" class="back-btn" onclick="backToTeams()">Torna alle squadre</a>
+  </div>
+
+  <div id="team3" class="player-list">
+    <h2>Giocatori della Squadra C:</h2>
+    <div class="player-item" onclick="showStatistics('player12')">Matteo Del Bello (C)</div>
+    <div class="player-item" onclick="showStatistics('player13')">Alessandro Pellegrini</div>
+    <div class="player-item" onclick="showStatistics('player14')">Filippo Peruzzi</div>
+    <div class="player-item" onclick="showStatistics('player15')">Emma Tulli</div>
+    <div class="player-item" onclick="showStatistics('player16')">Lorenzo Pedana</div>
+    <a href="javascript:void(0)" class="back-btn" onclick="backToTeams()">Torna alle squadre</a>
+  </div>
+
+  <div id="team4" class="player-list">
+    <h2>Giocatori della Squadra D:</h2>
+    <div class="player-item" onclick="showStatistics('player17')">Tommaso Dello Storto (C)</div>
+    <div class="player-item" onclick="showStatistics('player18')">Alessandro Coricelli</div>
+    <div class="player-item" onclick="showStatistics('player19')">Filippo Badiali</div>
+    <div class="player-item" onclick="showStatistics('player20')">Filippo Chiavari</div>
+    <div class="player-item" onclick="showStatistics('player21')">Alessandro Bibi</div>
+    <div class="player-item" onclick="showStatistics('player22')">Gabriele Servili</div>
+    <a href="javascript:void(0)" class="back-btn" onclick="backToTeams()">Torna alle squadre</a>
+  </div>
+
+  <!-- Sezione dettagli personale del giocatore (creata dinamicamente) -->
+  <div id="player-detail" class="statistics-table" style="display:none;">
+    <!-- I dettagli del giocatore verranno iniettati qui -->
+  </div>
+
+</div> <!-- Fine container -->
+
+<script>
+  // Variabili per la modalità admin
+  let isAdmin = false;
+  const adminPassword = "admin123"; // Cambia la password se necessario
+
+  // Variabile per salvare la posizione di scroll al click della squadra
+  let lastTeamScrollPosition = 0;
+
+  // Dati delle squadre
+  const teams = {
+    team1: { name: "The Originals", pts: 0, pg: 0, v: 0, s: 0, players: ["player1","player2","player3","player4","player5","player6"] },
+    team2: { name: "Legion Aurea", pts: 0, pg: 0, v: 0, s: 0, players: ["player7","player8","player9","player10","player11"] },
+    team3: { name: "Gooners", pts: 0, pg: 0, v: 0, s: 0, players: ["player12","player13","player14","player15","player16"] },
+    team4: { name: "Panters", pts: 0, pg: 0, v: 0, s: 0, players: ["player17","player18","player19","player20","player21","player22"] }
+  };
+
+  // Dati dei giocatori (con surname per ordinamento)
+  const players = {
+    player1:  { id: "player1",  name: "Enea Casciarri",         surname: "Casciarri",     team: "team1", pts: 0, assists: 0, cautions: 0 },
+    player2:  { id: "player2",  name: "Gioia Maggiolini",        surname: "Maggiolini",    team: "team1", pts: 0, assists: 0, cautions: 0 },
+    player3:  { id: "player3",  name: "Matteo Panno",            surname: "Panno",         team: "team1", pts: 0, assists: 0, cautions: 0 },
+    player4:  { id: "player4",  name: "Lorenzo Cavanna",         surname: "Cavanna",       team: "team1", pts: 0, assists: 0, cautions: 0 },
+    player5:  { id: "player5",  name: "Noura Kamouni",           surname: "Kamouni",       team: "team1", pts: 0, assists: 0, cautions: 0 },
+    player6:  { id: "player6",  name: "Marco Zenobi",            surname: "Zenobi",        team: "team1", pts: 0, assists: 0, cautions: 0 },
+    player7:  { id: "player7",  name: "Mattia De Rosa",          surname: "De Rosa",       team: "team2", pts: 0, assists: 0, cautions: 0 },
+    player8:  { id: "player8",  name: "Gabriele Lacava",         surname: "Lacava",        team: "team2", pts: 0, assists: 0, cautions: 0 },
+    player9:  { id: "player9",  name: "Domenico Del Bene",       surname: "Del Bene",      team: "team2", pts: 0, assists: 0, cautions: 0 },
+    player10: { id: "player10", name: "Lorenzo Luzzi",           surname: "Luzzi",         team: "team2", pts: 0, assists: 0, cautions: 0 },
+    player11: { id: "player11", name: "Michele Sforna",          surname: "Sforna",        team: "team2", pts: 0, assists: 0, cautions: 0 },
+    player12: { id: "player12", name: "Matteo Del Bello",        surname: "Del Bello",     team: "team3", pts: 0, assists: 0, cautions: 0 },
+    player13: { id: "player13", name: "Alessandro Pellegrini",   surname: "Pellegrini",    team: "team3", pts: 0, assists: 0, cautions: 0 },
+    player14: { id: "player14", name: "Filippo Peruzzi",         surname: "Peruzzi",       team: "team3", pts: 0, assists: 0, cautions: 0 },
+    player15: { id: "player15", name: "Emma Tulli",              surname: "Tulli",         team: "team3", pts: 0, assists: 0, cautions: 0 },
+    player16: { id: "player16", name: "Lorenzo Pedana",          surname: "Pedana",        team: "team3", pts: 0, assists: 0, cautions: 0 },
+    player17: { id: "player17", name: "Tommaso Dello Storto",    surname: "Dello Storto",  team: "team4", pts: 0, assists: 0, cautions: 0 },
+    player18: { id: "player18", name: "Alessandro Coricelli",    surname: "Coricelli",     team: "team4", pts: 0, assists: 0, cautions: 0 },
+    player19: { id: "player19", name: "Filippo Badiali",         surname: "Badiali",      team: "team4", pts: 0, assists: 0, cautions: 0 },
+    player20: { id: "player20", name: "Filippo Chiavari",        surname: "Chiavari",      team: "team4", pts: 0, assists: 0, cautions: 0 },
+    player21: { id: "player21", name: "Alessandro Bibi",         surname: "Bibi",          team: "team4", pts: 0, assists: 0, cautions: 0 },
+    player22: { id: "player22", name: "Gabriele Servili",        surname: "Servili",       team: "team4", pts: 0, assists: 0, cautions: 0 }
+  };
+
+  // --- Funzioni di rendering delle classifiche ---
+
+  // Renderizza la classifica delle squadre ordinando per PTS (decrescente)
+  function renderTeamStandings() {
+    const tbody = document.querySelector("#team-standings tbody");
+    tbody.innerHTML = "";
+    const sortedTeams = Object.keys(teams).sort((a, b) => teams[b].pts - teams[a].pts);
+    sortedTeams.forEach(teamId => {
+      const team = teams[teamId];
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td data-team="${teamId}" data-field="name">${team.name}</td>
+        <td data-team="${teamId}" data-field="pts" class="editable">${team.pts}</td>
+        <td data-team="${teamId}" data-field="pg" class="editable">${team.pg}</td>
+        <td data-team="${teamId}" data-field="v" class="editable">${team.v}</td>
+        <td data-team="${teamId}" data-field="s" class="editable">${team.s}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Renderizza la classifica dei giocatori per un determinato stat (pts, assists o cautions)
+  function renderPlayerStandings(stat) {
+    let tbody;
+    if(stat === "pts") {
+      tbody = document.querySelector("#points-standings tbody");
+    } else if(stat === "assists") {
+      tbody = document.querySelector("#assists-standings tbody");
+    } else if(stat === "cautions") {
+      tbody = document.querySelector("#cautions-standings tbody");
+    }
+    tbody.innerHTML = "";
+    // Ordina i giocatori: se il valore è uguale, usa il cognome (alphabetico)
+    const sortedPlayers = Object.values(players).sort((a, b) => {
+      if(b[stat] === a[stat]) {
+        return a.surname.localeCompare(b.surname);
+      }
+      return b[stat] - a[stat];
+    });
+    sortedPlayers.forEach(player => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td data-player="${player.id}" data-field="name">${player.name}</td>
+        <td data-player="${player.id}" data-field="${stat}" class="editable">${player[stat]}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Renderizza tutte le classifiche
+  function renderStandings() {
+    renderTeamStandings();
+    renderPlayerStandings("pts");
+    renderPlayerStandings("assists");
+    renderPlayerStandings("cautions");
+    // Attiva o disattiva il contenteditable in base alla modalità admin
+    if(isAdmin) {
+      enableEditing();
+    } else {
+      disableEditing();
+    }
+  }
+
+  // Abilita l'editing per le celle con classe "editable"
+  function enableEditing() {
+    document.querySelectorAll(".editable").forEach(cell => {
+      cell.contentEditable = true;
+      cell.style.border = "1px dashed #ccc";
+    });
+  }
+
+  function disableEditing() {
+    document.querySelectorAll(".editable").forEach(cell => {
+      cell.contentEditable = false;
+      cell.style.border = "none";
+    });
+  }
+
+  // Quando una cella editabile perde il fuoco, aggiorna il dato corrispondente
+  document.addEventListener("blur", function(e) {
+    if(isAdmin && e.target.classList.contains("editable")) {
+      const cell = e.target;
+      const newValue = parseInt(cell.textContent) || 0;
+      // Se è una cella della squadra
+      if(cell.dataset.team) {
+        const teamId = cell.dataset.team;
+        const field = cell.dataset.field;
+        teams[teamId][field] = newValue;
+        renderStandings();
+      }
+      // Se è una cella del giocatore
+      if(cell.dataset.player) {
+        const playerId = cell.dataset.player;
+        const field = cell.dataset.field;
+        players[playerId][field] = newValue;
+        renderStandings();
+        // Se il dettaglio del giocatore è visibile, aggiornalo
+        const playerDetail = document.getElementById("player-detail");
+        if(playerDetail.style.display === "block" && playerDetail.dataset.player === playerId) {
+          renderPlayerDetail(playerId);
+        }
+      }
+    }
+  }, true);
+
+  // --- Funzioni per la visualizzazione del dettaglio del giocatore ---
+  function renderPlayerDetail(playerId) {
+    const player = players[playerId];
+    const detailDiv = document.getElementById("player-detail");
+    detailDiv.dataset.player = playerId;
+    detailDiv.innerHTML = `
+      <h2>${player.name}</h2>
+      <table>
+        <tr>
+          <th>Punti</th>
+          <th>Assist</th>
+          <th>Ammonizioni</th>
+        </tr>
+        <tr>
+          <td data-player="${playerId}" data-field="pts" class="editable">${player.pts}</td>
+          <td data-player="${playerId}" data-field="assists" class="editable">${player.assists}</td>
+          <td data-player="${playerId}" data-field="cautions" class="editable">${player.cautions}</td>
+        </tr>
+      </table>
+      <a href="javascript:void(0)" class="back-btn" onclick="backToTeams()">Torna alle squadre</a>
+    `;
+    detailDiv.style.display = "block";
+    if(isAdmin) enableEditing();
+  }
+
+  function showStatistics(playerId) {
+    // Nascondi liste e classifiche
+    document.querySelectorAll('.player-list').forEach(list => list.style.display = 'none');
+    document.querySelector('.team-list').style.display = 'none';
+    document.querySelectorAll('.statistics-table').forEach(div => {
+      if(div.id !== "player-detail") div.style.display = 'none';
+    });
+    renderPlayerDetail(playerId);
+  }
+
+  // Funzione modificata per il "Torna alle squadre"
+  function backToTeams() {
+    document.querySelectorAll('.player-list').forEach(list => list.style.display = 'none');
+    document.querySelectorAll('.statistics-table').forEach(div => div.style.display = 'none');
+    document.querySelector('.team-list').style.display = 'block';
+    // Mostra anche le classifiche
+    document.querySelector('.standings').style.display = 'block';
+    // Ripristina la posizione di scroll salvata
+    window.scrollTo(0, lastTeamScrollPosition);
+  }
+
+  // Funzione per mostrare i giocatori di una squadra:
+  // Ora riceve anche "elem" per salvare la posizione in cui è stato cliccato
+  function showPlayers(teamId, elem) {
+    // Salva la posizione corrente della finestra (dove è stato cliccato il tasto della squadra)
+    lastTeamScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    document.querySelectorAll('.player-list').forEach(list => list.style.display = 'none');
+    document.querySelector('.team-list').style.display = 'none';
+    document.querySelectorAll('.statistics-table').forEach(div => {
+      if(div.id !== "player-detail") div.style.display = 'none';
+    });
+    document.getElementById(teamId).style.display = 'block';
+  }
+
+  // --- Gestione pulsante Admin ---
+  document.getElementById("admin-btn").addEventListener("click", function() {
+    if(!isAdmin) {
+      const pwd = prompt("Inserisci la password admin:");
+      if(pwd === adminPassword) {
+        isAdmin = true;
+        alert("Modalità admin attivata");
+        this.textContent = "Admin Logout";
+        renderStandings();
+      } else {
+        alert("Password errata");
+      }
+    } else {
+      isAdmin = false;
+      alert("Modalità admin disattivata");
+      this.textContent = "Admin Login";
+      renderStandings();
+    }
+  });
+
+  // Inizializza le classifiche al caricamento della pagina
+  renderStandings();
+</script>
+
+</body>
+</html>
+
+
+
+
+
